@@ -90,51 +90,60 @@ public class Utils {
     }
 
     /**
-     *获取度分秒
-     * @author wnm
-     * @date 2020/7/29
-     * @param
-     * @return java.util.Map<java.lang.String,java.lang.Double>
+     * 输入的经纬度字符串转换成度
+     * 输入格式：112°12′50″
+     * 输出double
      */
     public static Double DFMtoDouble(String str) {
+        //定义Map对象对应存入度分秒
         Map<String, Double> map = new HashMap<String, Double>();
         //是否有°
         if (str.contains("°")) {
             String dStr = str.substring(str.indexOf(""), str.indexOf("°"));
+            //获取度数
             double d = Double.parseDouble(dStr);
+            //存入map对象
             map.put("d", d);
             //是否有′
             if (str.contains("′")) {
                 String fStr = str.substring(str.indexOf("°") + 1, str.indexOf("′"));
+                //获取分
                 double f = Double.parseDouble(fStr);
+                //存入map对象
                 map.put("f", f);
                 String mStr = str.substring(str.indexOf("′") + 1);
-                if (mStr.equals("")) {
-                    map.put("m", 0.00);
-                }
-                else {
-                    double m = Double.parseDouble(mStr);
+                //是否有″
+                if (str.contains("″")) {
+                    //获取秒
+                    double m = Double.parseDouble(mStr.substring(0,mStr.indexOf("″")));
+                    //存入map对象
                     map.put("m", m);
                 }
+                else {
+                    //若秒为空，秒赋值为0
+                    map.put("m", 0.00);
+                }
             } else {
+                //若分秒都为空，分秒赋值为0
                 map.put("f", 0.00);
                 map.put("m", 0.00);
             }
         } else {
+            //若度分秒都为空，度分秒赋值为0
             map.put("d", 0.00);
             map.put("f", 0.00);
             map.put("m", 0.00);
         }
+        //度分秒转换成度
         double d = map.get("d") + map.get("f") / 60.0 + map.get("m") / 3600.0;
         return d;
     }
 
     /**
-     *获取度分秒
-     * @author wnm
-     * @date 2020/7/29
-     * @param
-     * @return java.util.Map<java.lang.String,java.lang.Double>
+     * 获取度分秒
+     * 输入的经纬度字符串转换成度
+     * 输入格式：112°12′50″
+     * 输出Map对象key分别对应：d表示度，f表示分，m表示秒
      */
     public static Map getDFM(String str) {
         Map<String, Double> map = new HashMap<String, Double>();
@@ -149,12 +158,13 @@ public class Utils {
                 double f = Double.parseDouble(fStr);
                 map.put("f", f);
                 String mStr = str.substring(str.indexOf("′") + 1);
-                if (mStr.equals("")) {
-                    map.put("m", 0.00);
+                //是否有″
+                if (str.contains("″")) {
+                    double m = Double.parseDouble(mStr.substring(0,mStr.indexOf("″")));
+                    map.put("m", m);
                 }
                 else {
-                    double m = Double.parseDouble(mStr);
-                    map.put("m", m);
+                    map.put("m", 0.00);
                 }
             } else {
                 map.put("f", 0.00);
@@ -170,27 +180,30 @@ public class Utils {
 
     /**
      * 度转换成度分秒
-     * @author wnm
-     * @date 2020/8/6
-     * @param
-     * @return
+     * 输出格式，如：112°12′54″
      */
     public static String DtoDFM(double number) {
+        //定义变量度
         int d = (int) number;
         String s = number + "";
+        //取小数部分计算分
         String result = "0." + s.split("\\.")[1];
+        //计算分
         double dF = Double.parseDouble(result) * 60;
         int f = (int) dF;
         s = dF + "";
+        //继续取小数部分计算秒
         result = "0." + s.split("\\.")[1];
         double dM = Double.parseDouble(result) * 60;
+        //保留两位有效数字
         String m = String.format("%.2f", dM);
+        //是否为60分，是则度加一
         if (m.equals("60.00")){
             f=f+1;
-            return d + "°" + f + "′" + 0;
+            return d + "°" + f + "′" + 0 + "″";
         }
         else {
-            return d + "°" + f + "′" + m;
+            return d + "°" + f + "′" + m + "″";
         }
     }
 
@@ -201,13 +214,13 @@ public class Utils {
             int d = (int) (map1.get("d") + map2.get("d"));
             int f = (int) (map1.get("f") + map2.get("f"));
             double m = map1.get("m") + map2.get("m");
-            return d + "°" + f + "′" + m;
+            return d + "°" + f + "′" + m + "″";
         }
         else {
             int d = (int) (map1.get("d") - map2.get("d"));
             int f = (int) (map1.get("f") - map2.get("f"));
             double m = map1.get("m") - map2.get("m");
-            return d + "°" + f + "′" + m;
+            return d + "°" + f + "′" + m + "″";
         }
     }
 }

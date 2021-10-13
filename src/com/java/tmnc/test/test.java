@@ -37,8 +37,7 @@ public class test {
 
     public static void TestNewMap(){
         NewMapNumberCalculate iolman=new NewMapNumberCalculate();
-        System.out.print(iolman.NewNumber_100Scale("116°28′25","39°54′30")+"\n");
-        System.out.print(iolman.NewNumber_Scale("5","116°28′25","39°54′30")+"\n");
-
+        System.out.print(iolman.NewNumber_100Scale("116°28′25″","39°54′30″")+"\n");
+        System.out.print(iolman.NewNumber_Scale("5","116°28′25″","39°54′30″")+"\n");
     }
 }
